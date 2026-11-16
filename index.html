@@ -1,0 +1,736 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RABBIT INTERNET 2000</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    cursor: crosshair;
+}
+
+body {
+    margin: 0;
+    background: #7900a8;
+    color: white;
+    font-family: "Comic Sans MS", cursive;
+    overflow-x: hidden;
+}
+
+@keyframes wiggle {
+    0%,100% { transform:rotate(-1deg); }
+    50% { transform:rotate(1deg); }
+}
+
+@keyframes bounce {
+    from { transform:translateY(0); }
+    to { transform:translateY(-12px); }
+}
+
+@keyframes move {
+    from { transform:translateX(100%); }
+    to { transform:translateX(-100%); }
+}
+
+@keyframes blink {
+    0%,49% { opacity:1; }
+    50%,100% { opacity:.65; }
+}
+
+header {
+    background:repeating-linear-gradient(
+        45deg,
+        #ff0080 0 15px,
+        #ffdf00 15px 30px,
+        #00eaff 30px 45px
+    );
+    text-align:center;
+    padding:20px;
+    border:8px ridge #00ff66;
+    color:#620080;
+}
+
+h1 {
+    font-size:clamp(30px,6vw,65px);
+    text-shadow:4px 4px yellow,7px 7px #ff0080;
+    animation:wiggle 2s infinite;
+}
+
+.topbar {
+    background:#ffee00;
+    color:#ff0080;
+    padding:12px;
+    overflow:hidden;
+    white-space:nowrap;
+    font-size:21px;
+    font-weight:bold;
+}
+
+.topbar span {
+    display:inline-block;
+    animation:move 13s linear infinite;
+}
+
+.timerbox {
+    background:#16002e;
+    color:#00ff66;
+    border:6px double yellow;
+    text-align:center;
+    padding:15px;
+    margin:15px;
+    box-shadow:0 0 20px cyan;
+}
+
+#timer {
+    font-family:monospace;
+    font-size:42px;
+    font-weight:bold;
+}
+
+button {
+    border:5px outset yellow;
+    background:#ff0080;
+    color:white;
+    padding:13px 20px;
+    font-family:inherit;
+    font-size:19px;
+    font-weight:bold;
+    margin:5px;
+}
+
+button:hover {
+    background:#00eaff;
+    color:#410080;
+    animation:wiggle .3s infinite;
+}
+
+button:disabled {
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+.layout {
+    display:grid;
+    grid-template-columns:145px minmax(0,1fr) 145px;
+    gap:10px;
+    padding:10px;
+}
+
+.side {
+    background:#ff0080;
+    border:6px ridge yellow;
+    padding:8px;
+    text-align:center;
+}
+
+.main {
+    min-width:0;
+    background:#ff8500;
+    border:9px ridge #00eaff;
+    padding:12px;
+}
+
+.rabbit {
+    font-size:55px;
+    display:inline-block;
+    animation:bounce 1s infinite alternate;
+}
+
+.banner {
+    text-align:center;
+    padding:18px 8px;
+    margin:13px 0;
+    border:6px ridge yellow;
+    font-size:clamp(16px,2.8vw,25px);
+    font-weight:bold;
+    text-shadow:2px 2px #000;
+    animation:wiggle 4s infinite;
+}
+
+.b1 {
+    background:linear-gradient(90deg,#ff0080,#8300ff,#00cfff);
+}
+
+.b2 {
+    background:repeating-linear-gradient(
+        45deg,#00a83b 0 12px,#caff00 12px 24px
+    );
+    color:#650078;
+    text-shadow:none;
+}
+
+.b3 {
+    background:linear-gradient(90deg,#ffea00,#ff6600,#ff0080);
+    color:#690052;
+    text-shadow:none;
+}
+
+.b4 {
+    background:linear-gradient(90deg,#00eaff,#003cff,#8c00ff);
+}
+
+.b5 {
+    background:linear-gradient(90deg,#ff00ff,#ff4c00,#ffe600);
+}
+
+.b6 {
+    background:repeating-linear-gradient(
+        135deg,#5700a8 0 15px,#ff0080 15px 30px
+    );
+}
+
+.fakead {
+    padding:13px;
+    margin:13px 0;
+    background:#ffea00;
+    color:#d00070;
+    border:5px dashed #ff0080;
+    text-align:center;
+    font-weight:bold;
+    font-size:20px;
+    animation:blink 2s infinite;
+}
+
+.content-text {
+    color:#39004e;
+    background:#ffb000;
+    padding:12px;
+    border:3px dotted #ff0080;
+    margin:12px 0;
+    font-size:15px;
+}
+
+.input-area {
+    background:#18002e;
+    padding:25px 10px;
+    border:8px ridge #00ff66;
+    text-align:center;
+    margin:20px 0;
+}
+
+input {
+    background:yellow;
+    color:#6c008a;
+    border:5px inset #ff0080;
+    padding:12px;
+    font-size:25px;
+    width:150px;
+    text-align:center;
+}
+
+#result {
+    display:none;
+    background:#00ff66;
+    color:#39004e;
+    border:8px double #ff0080;
+    padding:20px;
+    text-align:center;
+    font-size:23px;
+}
+
+footer {
+    background:#100020;
+    color:#00ff66;
+    padding:25px;
+    text-align:center;
+    border-top:8px ridge yellow;
+}
+
+@media(max-width:650px) {
+    .layout {
+        grid-template-columns:60px minmax(0,1fr) 60px;
+        gap:5px;
+        padding:5px;
+    }
+
+    .side {
+        padding:3px;
+        font-size:10px;
+    }
+
+    .side .banner {
+        font-size:11px;
+    }
+
+    .main {
+        padding:7px;
+    }
+
+    #timer {
+        font-size:30px;
+    }
+
+    .rabbit {
+        font-size:32px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,*::before,*::after {
+        animation:none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="rabbit">🐰</div>
+    <h1>RABBIT INTERNET 2000</h1>
+    <h2>✦ O PORTAL MAIS ALEATÓRIO DA INTERNET ✦</h2>
+    <p>EST. 2000 | 100% COELHOS | 0% ORGANIZAÇÃO</p>
+</header>
+
+<div class="topbar">
+    <span>
+    🚨 SUPER PROMOÇÃO!!! 🐰 COELHOS GRÁTIS!!!
+    ✨ CLIQUE EM TUDO!!! ✨
+    🥕 CENOURAS COM DESCONTO!!!
+    💥 VOCÊ NÃO PODE PERDER!!!
+    </span>
+</div>
+
+<section class="timerbox">
+    <h2>⏱️ DESAFIO CONTRA O RELÓGIO</h2>
+    <div id="timer">00:00.0</div>
+    <p id="timerStatus">Aguardando início da missão...</p>
+
+    <button id="startBtn" onclick="startTimer()">
+        ▶ INICIAR DESAFIO
+    </button>
+</section>
+
+<div class="layout">
+
+<aside class="side">
+    <h3>PUBLICIDADE</h3>
+    <div class="rabbit">🐰</div>
+    <div class="banner b3">COMPRE JÁ!!!</div>
+    <p>VOCÊ PRECISA DE UM COELHO VIRTUAL!</p>
+    <div class="banner b1">SUPER OFERTA!</div>
+    <div class="rabbit">🥕</div>
+    <div class="fakead">CLIQUE AQUI!!!</div>
+    <div class="banner b5">NEW!!! NEW!!!</div>
+    <div class="rabbit">🐇</div>
+    <p>ERRO: CENOURA NÃO ENCONTRADA.</p>
+    <div class="banner b4">PROMOÇÃO!</div>
+    <div class="rabbit">🐰</div>
+</aside>
+
+<main class="main">
+
+    <div class="banner b1">
+        ⭐ BEM-VINDO AO MUNDO DOS COELHOS ⭐
+        <br>O MELHOR PORTAL DA INTERNET!
+    </div>
+
+    <div class="banner b2">
+        🥕 MEGA PROMOÇÃO DE CENOURAS 🥕
+        <br>ÚLTIMAS UNIDADES!!!
+    </div>
+
+    <div class="fakead">
+        ⚠️ ATENÇÃO: ESTE SITE CONTÉM MUITOS COELHOS!
+    </div>
+
+    <div style="text-align:center">
+        <span class="rabbit">🐰</span>
+        <span class="rabbit">🐇</span>
+        <span class="rabbit">🥕</span>
+        <span class="rabbit">🐰</span>
+    </div>
+
+    <div class="banner b4">
+        🔥 RABBIT NEWS 🔥
+        <br>INFORMAÇÕES QUE NINGUÉM SOLICITOU!
+    </div>
+
+    <div class="content-text">
+        Os coelhos pertencem à família Leporidae e estão presentes
+        em diversos ambientes do mundo. São conhecidos pelas orelhas
+        compridas, pelos movimentos ágeis e pela alimentação
+        predominantemente herbívora.
+    </div>
+
+    <div class="banner b5">
+        💥 IMPERDÍVEL! IMPERDÍVEL! IMPERDÍVEL! 💥
+        <br>O NOVO COELHO 3D CHEGOU!
+    </div>
+
+    <div class="banner b3">
+        🏆 VOCÊ PODE SER NOSSO VISITANTE DO MÊS!
+        <br>PARTICIPE DA PROMOÇÃO!
+    </div>
+
+    <div class="fakead">
+        NOVO!!! NOVO!!! NOVO!!!
+        <br>O COELHO QUE VAI MUDAR SUA VIDA!!!
+    </div>
+
+    <div class="content-text">
+        Os coelhos possuem dentes que crescem continuamente.
+        Por isso, precisam desgastá-los naturalmente por meio
+        da alimentação. A estrutura dos dentes é uma adaptação
+        interessante para animais que consomem vegetais.
+    </div>
+
+    <div class="banner b6">
+        ✨ CENTRAL DE ENTRETENIMENTO RABBIT ✨
+        <br>DIVIRTA-SE! OU NÃO!
+    </div>
+
+    <div class="banner b2">
+        🥕 CENOURAS EM ATÉ 12X SEM JUROS 🥕
+    </div>
+
+    <div class="fakead">
+        VOCÊ FOI SELECIONADO PARA NOSSA PROMOÇÃO!
+        <br>CLIQUE E DESCUBRA O SEGREDO!
+    </div>
+
+    <div class="banner b1">
+        🚀 RABBIT EXPRESS 🚀
+        <br>ENTREGAMOS CENOURAS EM TODO O UNIVERSO!
+    </div>
+
+    <div class="content-text">
+        Embora sejam frequentemente associados às cenouras,
+        coelhos domésticos precisam de uma alimentação equilibrada,
+        com feno como componente principal. Cenouras devem ser
+        oferecidas apenas em quantidades moderadas.
+    </div>
+
+    <div class="banner b3">
+        🌈 O FESTIVAL INTERNACIONAL DOS COELHOS 🌈
+        <br>VOCÊ ESTÁ CONVIDADO!
+    </div>
+
+    <div class="banner b5">
+        🔔 ATENÇÃO! ATENÇÃO! ATENÇÃO!
+        <br>UMA NOVIDADE ESTÁ CHEGANDO!
+    </div>
+
+    <div class="fakead">
+        🐰 NÃO PERCA A OPORTUNIDADE DE TER
+        UM COELHO IMAGINÁRIO!
+    </div>
+
+    <div class="content-text">
+        Os coelhos possuem um campo de visão bastante amplo,
+        característica relacionada à posição lateral dos olhos.
+        Suas orelhas também desempenham um papel importante
+        na percepção dos sons ao redor.
+    </div>
+
+    <div class="banner b4">
+        📢 NOTÍCIA URGENTE!!!
+        <br>COELHO É VISTO COMENDO UMA CENOURA!
+    </div>
+
+    <div class="banner b2">
+        🟢 SUPER GREEN RABBIT CLUB 🟢
+        <br>VENHA FAZER PARTE!
+    </div>
+
+    <div class="fakead">
+        ⭐ VOCÊ GANHOU UM CUPOM ESPECIAL!
+        <br>USE NA SUA PRÓXIMA COMPRA!
+    </div>
+
+    <div class="banner b6">
+        🎉 FESTA DOS COELHOS!
+        <br>MÚSICA, CENOURAS E MUITA DIVERSÃO!
+    </div>
+
+    <div class="content-text">
+        Os coelhos apresentam comportamentos de comunicação
+        por meio de posturas corporais, movimentos e vocalizações.
+        Observar esses sinais ajuda a compreender suas necessidades
+        e seu estado comportamental.
+    </div>
+
+    <div class="banner b1">
+        💎 RABBIT PREMIUM 💎
+        <br>EXCLUSIVO PARA MEMBROS VIP!
+    </div>
+
+    <div class="fakead">
+        CUIDADO!!! ESTE ANÚNCIO PODE CONTER
+        QUANTIDADES EXCESSIVAS DE CENOURAS.
+    </div>
+
+    <div class="banner b3">
+        🔥 MEGA LIQUIDAÇÃO DE PRIMAVERA 🔥
+        <br>TUDO PRECISA ACABAR!
+    </div>
+
+    <div class="banner b5">
+        🐇 RABBIT FASHION 🐇
+        <br>A MODA QUE TODO COELHO MERECE!
+    </div>
+
+    <div class="content-text">
+        Na natureza, os coelhos desempenham papéis importantes
+        nos ecossistemas, servindo de alimento para predadores
+        e participando da dinâmica da vegetação.
+    </div>
+
+    <div class="banner b4">
+        ⭐⭐⭐ CENTRAL DE ANÚNCIOS ⭐⭐⭐
+        <br>AS MELHORES OFERTAS ESTÃO AQUI!
+    </div>
+
+    <div class="fakead">
+        NÃO FECHE ESTA PÁGINA!
+        <br>VOCÊ AINDA NÃO VIU TUDO!
+    </div>
+
+    <div class="banner b2">
+        🥕 CENOURA PREMIUM GOLD 🥕
+        <br>EDIÇÃO LIMITADA!
+    </div>
+
+    <div class="content-text">
+        A diversidade de espécies de coelhos e lebres é resultado
+        de adaptações evolutivas a diferentes ambientes. Existem
+        animais que habitam regiões frias, campos abertos e áreas
+        de vegetação densa.
+    </div>
+
+    <div class="banner b6">
+        🚨 SUPER AVISO DO ADMINISTRADOR 🚨
+        <br>LEIA TODOS OS ANÚNCIOS!
+    </div>
+
+    <div class="banner b1">
+        ✨ RABBIT WORLD ✨
+        <br>UM UNIVERSO DE POSSIBILIDADES!
+    </div>
+
+    <div class="fakead">
+        🐰 VOCÊ NÃO VAI ACREDITAR NESTA OFERTA!
+    </div>
+
+    <div class="banner b3">
+        🏅 ANÚNCIO ESPECIAL DO DIA 🏅
+        <br>CONFIRA AS NOVIDADES!
+    </div>
+
+    <div class="content-text">
+        Os coelhos domésticos podem estabelecer vínculos sociais
+        com outros animais e com seres humanos. Seu bem-estar
+        depende de espaço adequado, enriquecimento ambiental
+        e cuidados veterinários.
+    </div>
+
+    <div style="
+        background:#a90068;
+        color:#ffe600;
+        border:3px dotted #00ff66;
+        padding:7px;
+        width:72%;
+        margin:25px auto;
+        text-align:center;
+        font-size:13px;
+        transform:rotate(-2deg);
+        box-shadow:5px 5px #37005a;
+    ">
+        <span style="font-size:10px">
+            RABBIT CLUB • COMUNICADO AOS MEMBROS
+        </span>
+        <br>
+        <span style="font-size:12px">
+            Ah, e a senha é
+        </span>
+        <strong style="
+            font-size:15px;
+            letter-spacing:3px;
+            color:#00ff66;
+        ">4826</strong>
+        <br>
+        <span style="font-size:9px">
+            não perca nossas próximas promoções!
+        </span>
+    </div>
+
+    <div class="banner b5">
+        🎊 VOCÊ CHEGOU AO FINAL DA PÁGINA?
+        <br>QUE DEDICAÇÃO!
+    </div>
+
+    <div class="banner b2">
+        🐰 RABBIT INTERNET NUNCA PARA 🐰
+    </div>
+
+    <div class="fakead">
+        ÚLTIMA CHANCE!!!
+        <br>GANHE UM COELHO IMAGINÁRIO!
+    </div>
+
+    <div class="banner b4">
+        ✨ OBRIGADO POR VISITAR NOSSO PORTAL ✨
+    </div>
+
+    <div class="input-area">
+        <h2>🔐 PORTAL DE DESBLOQUEIO</h2>
+
+        <p>
+            Encontrou o código secreto?
+            Digite os quatro números abaixo.
+        </p>
+
+        <input
+            id="password"
+            type="text"
+            maxlength="4"
+            inputmode="numeric"
+            placeholder="????"
+        >
+
+        <br><br>
+
+        <button id="finishBtn" onclick="checkPassword()" disabled>
+            🔓 FINALIZAR MISSÃO
+        </button>
+
+        <p id="feedback"></p>
+    </div>
+
+    <div id="result">
+        🎉 MISSÃO CONCLUÍDA! 🎉
+        <br><br>
+        VOCÊ SOBREVIVEU À RABBIT INTERNET!
+        <br>
+        <span id="finalTime"></span>
+        <br><br>
+        <button onclick="location.reload()">
+            JOGAR NOVAMENTE
+        </button>
+    </div>
+
+</main>
+
+<aside class="side">
+    <h3>RABBIT ADS</h3>
+    <div class="banner b2">SALE!!!</div>
+    <div class="rabbit">🐰</div>
+    <p>COMPRE UMA CENOURA PREMIUM.</p>
+    <div class="banner b4">NEW!!!</div>
+    <div class="rabbit">🥕</div>
+    <p>COELHOS EM PROMOÇÃO!</p>
+    <div class="banner b3">WOW!!!</div>
+    <div class="rabbit">🐇</div>
+    <p>VOCÊ NÃO PRECISA DISSO.</p>
+    <div class="fakead">CLIQUE!!!</div>
+    <div class="banner b1">MEGA SALE!</div>
+    <div class="rabbit">🐰</div>
+    <p>ESTE SITE É MUITO CONFIÁVEL.</p>
+</aside>
+
+</div>
+
+<footer>
+    🐰 RABBIT INTERNET 2000 🐰
+    <br>
+    TODOS OS DIREITOS RESERVADOS.
+    <br>
+    © 2000-2026 | CENOURAS INC.
+</footer>
+
+<script>
+let startTime = null;
+let interval = null;
+let elapsed = 0;
+let running = false;
+let finished = false;
+
+function formatTime(ms) {
+    let total = ms / 1000;
+    let minutes = Math.floor(total / 60);
+    let seconds = Math.floor(total % 60);
+    let tenths = Math.floor((ms % 1000) / 100);
+
+    return String(minutes).padStart(2,"0") + ":" +
+           String(seconds).padStart(2,"0") + "." + tenths;
+}
+
+function startTimer() {
+    if (running || finished) return;
+
+    startTime = Date.now() - elapsed;
+    running = true;
+
+    document.getElementById("startBtn").disabled = true;
+    document.getElementById("finishBtn").disabled = false;
+
+    document.getElementById("timerStatus").textContent =
+        "MISSÃO EM ANDAMENTO! ENCONTRE O CÓDIGO!";
+
+    document.getElementById("password").disabled = false;
+
+    interval = setInterval(() => {
+        elapsed = Date.now() - startTime;
+
+        document.getElementById("timer").textContent =
+            formatTime(elapsed);
+
+    }, 100);
+}
+
+function checkPassword() {
+    const input = document.getElementById("password").value;
+    const feedback = document.getElementById("feedback");
+
+    if (!running || finished) return;
+
+    if (input === "4826") {
+
+        elapsed = Date.now() - startTime;
+        running = false;
+        finished = true;
+
+        clearInterval(interval);
+
+        document.getElementById("timer").textContent =
+            formatTime(elapsed);
+
+        document.getElementById("timerStatus").textContent =
+            "MISSÃO CONCLUÍDA!";
+
+        document.getElementById("finishBtn").disabled = true;
+        document.getElementById("password").disabled = true;
+
+        document.getElementById("finalTime").textContent =
+            "Seu tempo: " + formatTime(elapsed);
+
+        document.getElementById("result").style.display = "block";
+
+        feedback.textContent = "SENHA CORRETA!";
+
+        document.getElementById("result").scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+    } else {
+        feedback.style.color = "#ffea00";
+        feedback.textContent =
+            "❌ SENHA INCORRETA! CONTINUE PROCURANDO!";
+    }
+}
+
+document.getElementById("password").disabled = true;
+
+document.getElementById("password").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        checkPassword();
+    }
+});
+</script>
+
+</body>
+</html>
